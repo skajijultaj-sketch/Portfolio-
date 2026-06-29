@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekh Anorul Haque | Portfolio</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Three.js for 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
+        /* Fixed 3D Canvas Background */
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Scroll Content Wrapper */
+        .content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-section {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffffff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #a3a3a3;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            color: #c084fc;
+            font-weight: 400;
+        }
+
+        /* Glassmorphism Grid Container */
+        .pricing-container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding: 0 10px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 30px 20px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        @media (hover: hover) {
+            .card:hover {
+                transform: translateY(-5px);
+                border-color: rgba(192, 132, 252, 0.4);
+            }
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .card .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #c084fc;
+            margin-bottom: 5px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+        }
+
+        .cta-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            p { font-size: 1rem; }
+            section { height: auto; min-height: 100vh; padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="content">
+        <!-- Section 1: Hero -->
+        <section class="hero-section">
+            <h1>Sekh Anorul Haque</h1>
+            <p>Gen Z Developer & Creative Visual Editor</p>
+            <p style="font-size: 0.9rem; margin-top: 15px; color: #666;">Scroll down to enter the loop</p>
+        </section>
+
+        <!-- Section 2: Skills 1 -->
+        <section class="scroll-section">
+            <h1>App & Web Developer</h1>
+            <p>Crafting responsive, high-performance digital architectures utilizing modern web engines and smart AI production workflows.</p>
+        </section>
+
+        <!-- Section 3: Skills 2 -->
+        <section class="scroll-section">
+            <h1>Visual Producer</h1>
+            <p>Designing thumb-stopping YouTube/Instagram <span class="highlight">thumbnails</span> and high-impact <span class="highlight">commercial posters</span> engineered for premium retention.</p>
+        </section>
+
+        <!-- Section 4: Packages & Contact -->
+        <section class="scroll-section" style="height: auto; min-height: 100vh;">
+            <h1>Flexible Packages</h1>
+            <p>Top-tier engineering built to fit your dynamic project scale.</p>
+            
+            <div class="pricing-container">
+                <div class="card">
+                    <h3>Web Development</h3>
+                    <div class="price">₹3K - ₹300K</div>
+                    <p style="font-size: 0.85rem;">Custom high-fidelity development solutions.</p>
+                </div>
+                <div class="card">
+                    <h3>App + Website</h3>
+                    <div class="price">₹5K - ₹500K</div>
+                    <p style="font-size: 0.85rem;">Complete ecosystem cross-platform deployment.</p>
+                </div>
+                <div class="card">
+                    <h3>Poster Design</h3>
+                    <div class="price">₹500</div>
+                    <p style="font-size: 0.85rem;">Per dynamic promotional poster asset.</p>
+                </div>
+                <div class="card">
+                    <h3>Thumbnail Design</h3>
+                    <div class="price">₹500</div>
+                    <p style="font-size: 0.85rem;">Per high-CTR social media thumbnail.</p>
+                </div>
+            </div>
+
+            <a href="tel:9474603635" class="cta-btn">Let's Work: 9474603635</a>
+        </section>
+    </div>
+
+    <script>
+        // --- GSAP & ScrollTrigger Setup ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        const sections = document.querySelectorAll("section");
+        sections.forEach((section, index) => {
+            if (index === 0) return; // Skip hero fade-in
+            gsap.to(section, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                    end: "top 30%",
+                    scrub: true,
+                    toggleActions: "play reverse play reverse"
+                }
+            });
+        });
+
+        // --- Three.js 3D Morphing Logic ---
+        const canvas = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 4;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Particle System variables
+        const particleCount = window.innerWidth < 768 ? 2500 : 5000; 
+        const geometry = new THREE.BufferGeometry();
+        
+        const positionsGalaxy = new Float32Array(particleCount * 3);
+        const positionsDNA = new Float32Array(particleCount * 3);
+        const currentPositions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        const colorGalaxy = new THREE.Color('#3b82f6'); // Blueish Galaxy
+        const colorDNA = new THREE.Color('#c084fc');    // Purpleish DNA
+
+        // Generate Math Arrays
+        for (let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+
+            // 1. Galaxy Formula (Spiral Arms)
+            const r = Math.pow(Math.random(), 2) * 3.5;
+            const arms = 3;
+            const theta = (i % arms) * ((2 * Math.PI) / arms) + r * 1.5 + (Math.random() - 0.5) * 0.3;
+            positionsGalaxy[i3] = Math.cos(theta) * r;
+            positionsGalaxy[i3 + 1] = (Math.random() - 0.5) * 0.2 * (3.5 - r);
+            positionsGalaxy[i3 + 2] = Math.sin(theta) * r;
+
+            // 2. DNA Double Helix Formula
+            const dnaHeight = 6;
+            const y = (Math.random() - 0.5) * dnaHeight;
+            const strand = Math.random() > 0.5 ? 0 : Math.PI; 
+            const dnaTheta = y * 3 + strand; 
+            const radius = 0.7;
+
+            positionsDNA[i3] = Math.cos(dnaTheta) * radius + (Math.random() - 0.5) * 0.1;
+            positionsDNA[i3 + 1] = y;
+            positionsDNA[i3 + 2] = Math.sin(dnaTheta) * radius + (Math.random() - 0.5) * 0.1;
+
+            // Initially render Galaxy shape
+            currentPositions[i3] = positionsGalaxy[i3];
+            currentPositions[i3 + 1] = positionsGalaxy[i3 + 1];
+            currentPositions[i3 + 2] = positionsGalaxy[i3 + 2];
+
+            // Mix Color Data
+            const mixedColor = colorGalaxy.clone().lerp(colorDNA, Math.random());
+            colors[i3] = mixedColor.r;
+            colors[i3 + 1] = mixedColor.g;
+            colors[i3 + 2] = mixedColor.b;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        // Round particles shader-like look
+        const material = new THREE.PointsMaterial({
+            size: 0.025,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particleSystem = new THREE.Points(geometry, material);
+        scene.add(particleSystem);
+
+        // Transition parameter object for GSAP tracking
+        const morphObject = { progress: 0 };
+
+        // Bind scroll progression to particle positions
+        gsap.to(morphObject, {
+            progress: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.2
+            },
+            onUpdate: () => {
+                const p = morphObject.progress;
+                const posAttr = geometry.attributes.position;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    // Interpolate point structures smoothly based on scroll progress
+                    posAttr.array[i3] = THREE.MathUtils.lerp(positionsGalaxy[i3], positionsDNA[i3], p);
+                    posAttr.array[i3+1] = THREE.MathUtils.lerp(positionsGalaxy[i3+1], positionsDNA[i3+1], p);
+                    posAttr.array[i3+2] = THREE.MathUtils.lerp(positionsGalaxy[i3+2], positionsDNA[i3+2], p);
+                }
+                posAttr.needsUpdate = true;
+            }
+        });
+
+        // --- Render Loop ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsedTime = clock.getElapsedTime();
+            const p = morphObject.progress;
+
+            // Idle rotations that shift depending on structural state
+            if (p < 0.1) {
+                // Galaxy spinning setup
+                particleSystem.rotation.y = elapsedTime * 0.05;
+                particleSystem.rotation.x = 0.2;
+                particleSystem.rotation.z = 0;
+            } else {
+                // DNA continuous vertical twist setup
+                particleSystem.rotation.y = elapsedTime * 0.4;
+                particleSystem.rotation.x = THREE.MathUtils.lerp(0.2, 0.4, p);
+                particleSystem.rotation.z = THREE.MathUtils.lerp(0, -0.2, p);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // --- Viewport Resize Handler ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+  </html>
+  
