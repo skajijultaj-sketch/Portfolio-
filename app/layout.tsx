@@ -9,9 +9,9 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "textura.eu — Technology that redefines interaction",
+  title: "Sekh Anorul Haque (SAH) — Building the Digital Future via Code & AI",
   description:
-    "We build systems at the intersection of data, design, and intelligence — where seemingly disconnected fundamentals come to life.",
+    "Portfolio of Sekh Anorul Haque (SAH). Full-stack web & app development, high-CTR thumbnail design, and viral poster design — engineered with code and AI.",
 }
 
 export const viewport: Viewport = {
