@@ -3,366 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sekh Anorul Haque | Production Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <title>Technology that redefines interaction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        body { background-color: #000000; color: #ffffff; font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
-        
-        #webgl-canvas {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            height: auto;
+        }
+
+        #webgl-container {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 1;
             pointer-events: none;
         }
 
-        .content { position: relative; z-index: 2; width: 100%; }
+        /* Glassmorphic Top Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(45deg, #ffffff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 100px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Scrollable Layout Structure */
+        .scroller {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
 
         section {
-            height: 100vh;
+            min-height: 100vh;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 30px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(40px);
-            pointer-events: none;
+            padding: 0 10%;
+            position: relative;
         }
 
-        .active-section { pointer-events: auto; }
+        /* Exact Typography Specs from Video */
+        .text-center {
+            text-align: center;
+            max-width: 800px;
+        }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 4.2rem;
             font-weight: 700;
+            line-height: 1.1;
             letter-spacing: -2px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            background: linear-gradient(180deg, #ffffff 0%, #a855f7 100%);
+            margin-bottom: 25px;
+            background: linear-gradient(to bottom, #ffffff 40%, #cccccc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(168, 85, 247, 0.2);
         }
 
-        p {
-            font-size: 1.25rem;
-            color: #d4d4d4;
-            max-width: 650px;
+        p.description {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.6);
             line-height: 1.6;
-            letter-spacing: 0.5px;
+            max-width: 620px;
+            margin: 0 auto 40px auto;
+            font-weight: 300;
         }
 
-        .highlight { color: #d8b4fe; font-weight: 700; text-shadow: 0 0 15px rgba(216, 180, 254, 0.6); }
-
-        .pricing-container {
-            width: 100%;
-            max-width: 1200px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
+        /* Interactive UI Elements matching Video */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
         }
 
-        .card {
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            border-radius: 24px;
-            padding: 35px 25px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .card h3 { font-size: 1.5rem; margin-bottom: 15px; color: #ffffff; letter-spacing: -0.5px;}
-        .card .price { font-size: 2rem; font-weight: 700; color: #c084fc; margin-bottom: 10px; }
-
-        .cta-btn {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 16px 40px;
-            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 100%);
+        .btn-primary {
+            background: #ffffff;
             color: #000000;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
             text-decoration: none;
-            border-radius: 40px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            box-shadow: 0 10px 30px rgba(255,255,255,0.15);
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
         }
 
-        .cta-btn:active { transform: scale(0.95); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background 0.3s;
+        }
 
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Metric Analytics Grid Layout from Screen 2 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 50px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 20px 40px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+
+        .metric-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        /* Custom Responsive Adjustments for Mobile Viewports */
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            p { font-size: 1rem; }
-            section { min-height: 100vh; height: auto; padding: 80px 24px; }
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            h1 { font-size: 2.4rem; letter-spacing: -1px; }
+            p.description { font-size: 1rem; padding: 0 10px; }
+            .metrics-grid { grid-template-columns: 1fr; gap: 20px; }
+            .metric-card { padding: 30px; }
+            .metric-value { font-size: 2.8rem; }
+            .btn-group { flex-direction: column; width: 100%; max-width: 280px; margin: 0 auto; }
+            .btn-primary, .btn-secondary { width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="webgl-canvas"></canvas>
+    <div id="webgl-container"></div>
 
-    <div class="content">
-        <section class="hero-section" style="opacity:1; transform:translateY(0);">
-            <h1>Sekh Anorul Haque</h1>
-            <p>Gen Z Engine Architect & Next-Gen Visual Editor</p>
-        </section>
+    <nav>
+        <div class="logo">textura.eu</div>
+        <div class="nav-links">
+            <a href="#" class="active">Showcase</a>
+            <a href="#">Products</a>
+            <a href="#">Solutions</a>
+            <a href="#">Pricing</a>
+            <a href="#">Documentation</a>
+        </div>
+        <a href="tel:9474603635" class="nav-btn">Get in touch</a>
+    </nav>
 
-        <section>
-            <h1>Web & App Architect</h1>
-            <p>Deploying cutting-edge digital platforms engineered with high-frame-rate <span class="highlight">3D graphics</span> and ultra-scalable infrastructure.</p>
-        </section>
-
-        <section>
-            <h1>Visual Production</h1>
-            <p>Generating high-retention commercial assets, premium brand poster layouts, and industry-grade social media thumbnail designs.</p>
-        </section>
-
-        <section style="height: auto; min-height: 100vh;">
-            <h1>Production Scale</h1>
-            <p>Scalable packages deployed globally to turn dynamic concepts into real assets.</p>
-            
-            <div class="pricing-container">
-                <div class="card">
-                    <h3>Websites</h3>
-                    <div class="price">Layout UI</div>
-                    <p>₹3,000 - ₹3,00,000</p>
-                </div>
-                <div class="card">
-                    <h3>App + Web</h3>
-                    <div class="price">Full Stack</div>
-                    <p>₹5,000 - ₹5,00,000</p>
-                </div>
-                <div class="card">
-                    <h3>Posters</h3>
-                    <div class="price">Commercial</div>
-                    <p>₹500 / Asset</p>
-                </div>
-                <div class="card">
-                    <h3>Thumbnails</h3>
-                    <div class="price">High-CTR</div>
-                    <p>₹500 / Asset</p>
+    <div class="scroller">
+        
+        <section id="screen-hero">
+            <div class="text-center">
+                <h1>Technology that redefines<br>the nature of interaction.</h1>
+                <p class="description">
+                    We build systems at the intersection of data, design, and intelligence — where seemingly disconnected fundamentals come to life.
+                </p>
+                <div class="btn-group">
+                    <a href="#" class="btn-primary">Our services</a>
+                    <a href="#" class="btn-secondary">Get in touch</a>
                 </div>
             </div>
+        </section>
 
-            <a href="tel:9474603635" class="cta-btn">Initiate Brief: 9474603635</a>
+        <section id="screen-analytics">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">3X</div>
+                    <div class="metric-label">increased customer interaction & cross-platform conversion rate.</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">63%</div>
+                    <div class="metric-label">reduced infrastructure overhead & operational hosting costs.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-horizon">
+            <div class="text-center">
+                <h1>A universe of possibilities —<br>already in motion.</h1>
+                <p class="description">
+                    Our system architecture is a complete, fluid ecosystem engineered to integrate flawlessly with your ongoing creative production pipelines.
+                </p>
+                <div class="btn-group">
+                    <a href="tel:9474603635" class="btn-primary" style="box-shadow: 0 0 40px rgba(168,85,247,0.4);">Initiate Deployment</a>
+                </div>
+            </div>
         </section>
     </div>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Text animations setup
-        const sections = document.querySelectorAll("section");
-        sections.forEach((section, index) => {
-            if (index === 0) return;
-            gsap.to(section, {
-                opacity: 1,
-                y: 0,
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 75%",
-                    end: "top 25%",
-                    scrub: true,
-                    toggleClass: { targets: section, className: "active-section" }
-                }
-            });
-        });
-
-        // --- MASSIVE 3D GRAPHICS ENGINE ---
-        const canvas = document.getElementById('webgl-canvas');
+        // --- GRAPHICS ENVIRONMENT ARCHITECTURE ---
+        const container = document.getElementById('webgl-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2('#000000', 0.15);
+        
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 4.5);
 
-        const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.01, 50);
-        camera.position.set(0, 2.5, 4.5);
-        camera.lookAt(0, 0, 0);
-
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
 
-        // Generate procedural high-glow circle texture to replace flat squares
-        function createCircleTexture() {
-            const matCanvas = document.createElement('canvas');
-            matCanvas.width = 64; matCanvas.height = 64;
-            const ctx = matCanvas.getContext('2d');
+        // Procedural generation of a glowing circular sprite texture to eliminate square pixels
+        function createParticleGlowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
             const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-            gradient.addColorStop(0, 'rgba(255,255,255,1)');
-            gradient.addColorStop(0.2, 'rgba(230,242,255,1)');
-            gradient.addColorStop(0.5, 'rgba(147,51,234,0.3)');
-            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.2, 'rgba(235, 245, 255, 0.9)');
+            gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.35)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, 64, 64);
-            const texture = new THREE.Texture(matCanvas);
+            const texture = new THREE.Texture(canvas);
             texture.needsUpdate = true;
             return texture;
         }
 
-        // MASSIVE Point count allocation
-        const particleCount = window.innerWidth < 768 ? 18000 : 45000;
-        const geometry = new THREE.BufferGeometry();
+        const particleTexture = createParticleGlowTexture();
+
+        // --- MATH-DRIVEN GEOMETRY SETS ---
+        const totalParticles = window.innerWidth < 768 ? 20000 : 45000;
+        const mainGeometry = new THREE.BufferGeometry();
         
-        const posGalaxy = new Float32Array(particleCount * 3);
-        const posDNA = new Float32Array(particleCount * 3);
-        const posCurrent = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
+        const positionsHero = new Float32Array(totalParticles * 3);
+        const positionsAnalytics = new Float32Array(totalParticles * 3);
+        const positionsHorizon = new Float32Array(totalParticles * 3);
+        const currentPositions = new Float32Array(totalParticles * 3);
+        const particleColors = new Float32Array(totalParticles * 3);
 
-        const colCore = new THREE.Color('#ffffff');
-        const colArm = new THREE.Color('#3b82f6');
-        const colDNA = new THREE.Color('#a855f7');
+        // Palette definitions mirroring video aesthetics
+        const neonCyan = new THREE.Color('#38bdf8');
+        const neonPurple = new THREE.Color('#a855f7');
+        const hotOrange = new THREE.Color('#f97316');
+        const brightWhite = new THREE.Color('#ffffff');
 
-        for(let i=0; i<particleCount; i++) {
+        for (let i = 0; i < totalParticles; i++) {
             const i3 = i * 3;
 
-            // 1. Massive Spiral Galaxy Generation Math
-            const r = Math.pow(Math.random(), 2.5) * 6.0;
-            const armsCount = 2;
-            const armAngle = ((i % armsCount) * (2 * Math.PI)) / armsCount;
-            const twistFactor = 2.8;
-            const currentAngle = armAngle + r * twistFactor;
+            // 1. Vortex Configuration (Screen 1)
+            const u = Math.random();
+            const v = Math.random();
+            const theta = u * 2.0 * Math.PI;
+            const phi = Math.acos(2.0 * v - 1.0);
+            
+            // Generate structured thick ring configuration with variable shell thickness
+            const innerRadius = 1.3;
+            const ringThickness = 0.9;
+            const radiusVortex = innerRadius + Math.pow(Math.random(), 1.5) * ringThickness;
+            
+            positionsHero[i3] = Math.cos(theta) * radiusVortex + (Math.random() - 0.5) * 0.15;
+            positionsHero[i3 + 1] = (Math.random() - 0.5) * 0.5;
+            positionsHero[i3 + 2] = Math.sin(theta) * radiusVortex + (Math.random() - 0.5) * 0.15;
 
-            // Random spread variations to create cosmic volumetric gas dispersion
-            const randomX = Math.pow(Math.random(), 3) * (Math.random() > 0.5 ? 1 : -1) * 0.4 * r;
-            const randomY = Math.pow(Math.random(), 3) * (Math.random() > 0.5 ? 1 : -1) * 0.25 * (6.0 - r);
-            const randomZ = Math.pow(Math.random(), 3) * (Math.random() > 0.5 ? 1 : -1) * 0.4 * r;
+            // 2. Double Helix Configuration (Screen 2)
+            const helixHeight = 6.0;
+            const currentY = (Math.random() - 0.5) * helixHeight;
+            const isStrandB = Math.random() > 0.5;
+            const angleOffset = isStrandB ? Math.PI : 0;
+            const totalTwists = 3.0;
+            const currentAngle = (currentY / helixHeight) * (totalTwists * 2 * Math.PI) + angleOffset;
+            const helixRadius = 0.85;
 
-            posGalaxy[i3] = Math.cos(currentAngle) * r + randomX;
-            posGalaxy[i3+1] = randomY;
-            posGalaxy[i3+2] = Math.sin(currentAngle) * r + randomZ;
-
-            // 2. High-Density DNA Helix Math
-            const dnaHeight = 10.0;
-            const yPosition = (Math.random() - 0.5) * dnaHeight;
-            const isSecondStrand = Math.random() > 0.5;
-            const helixAngle = yPosition * 2.2 + (isSecondStrand ? Math.PI : 0);
-            const helixRadius = 1.1;
-
-            // Structural connectors generation math
-            const isBridge = Math.random() < 0.25;
-            if (isBridge) {
-                const interpolationFactor = Math.random();
-                posDNA[i3] = Math.cos(helixAngle) * helixRadius * interpolationFactor;
-                posDNA[i3+1] = yPosition;
-                posDNA[i3+2] = Math.sin(helixAngle) * helixRadius * interpolationFactor;
+            // Compute structured interconnecting structural bridge vectors
+            if (Math.random() > 0.8) {
+                const lerpFactor = Math.random();
+                positionsAnalytics[i3] = Math.cos(currentAngle) * helixRadius * lerpFactor;
+                positionsAnalytics[i3 + 1] = currentY;
+                positionsAnalytics[i3 + 2] = Math.sin(currentAngle) * helixRadius * lerpFactor;
             } else {
-                posDNA[i3] = Math.cos(helixAngle) * helixRadius + (Math.random() - 0.5) * 0.15;
-                posDNA[i3+1] = yPosition;
-                posDNA[i3+2] = Math.sin(helixAngle) * helixRadius + (Math.random() - 0.5) * 0.15;
+                positionsAnalytics[i3] = Math.cos(currentAngle) * helixRadius + (Math.random() - 0.5) * 0.1;
+                positionsAnalytics[i3 + 1] = currentY;
+                positionsAnalytics[i3 + 2] = Math.sin(currentAngle) * helixRadius + (Math.random() - 0.5) * 0.1;
             }
 
-            // Initialization state setting
-            posCurrent[i3] = posGalaxy[i3];
-            posCurrent[i3+1] = posGalaxy[i3+1];
-            posCurrent[i3+2] = posGalaxy[i3+2];
+            // 3. Topology Landscape Wave Grid Configuration (Screen 3)
+            const gridWidth = 10.0;
+            const gridDepth = 6.0;
+            const targetX = (Math.random() - 0.5) * gridWidth;
+            const targetZ = (Math.random() - 0.5) * gridDepth;
+            
+            positionsHorizon[i3] = targetX;
+            // Generate procedural continuous sine waves across the plane grid arrays
+            positionsHorizon[i3 + 1] = Math.sin(targetX * 1.2) * 0.4 + Math.cos(targetZ * 1.5) * 0.3 - 0.8;
+            positionsHorizon[i3 + 2] = targetZ;
 
-            // Color spectrum construction interpolation
-            let mixedColor;
-            if(r < 1.2) {
-                mixedColor = colCore.clone().lerp(colArm, r / 1.2);
+            // Initialize position array to Hero layout state
+            currentPositions[i3] = positionsHero[i3];
+            currentPositions[i3 + 1] = positionsHero[i3 + 1];
+            currentPositions[i3 + 2] = positionsHero[i3 + 2];
+
+            // 4. Color Spectrum Mapping Calculations
+            let selectedColor = brightWhite.clone();
+            if (i % 3 === 0) {
+                selectedColor.lerp(neonCyan, Math.random());
+            } else if (i % 3 === 1) {
+                selectedColor.lerp(neonPurple, Math.random());
             } else {
-                mixedColor = colArm.clone().lerp(colDNA, (r - 1.2) / 4.8);
+                selectedColor.lerp(hotOrange, Math.random());
             }
-            colors[i3] = mixedColor.r;
-            colors[i3+1] = mixedColor.g;
-            colors[i3+2] = mixedColor.b;
+
+            particleColors[i3] = selectedColor.r;
+            particleColors[i3 + 1] = selectedColor.g;
+            particleColors[i3 + 2] = selectedColor.b;
         }
 
-        geometry.setAttribute('position', new THREE.BufferAttribute(posCurrent, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        mainGeometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
+        mainGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
-        const material = new THREE.PointsMaterial({
-            size: window.innerWidth < 768 ? 0.05 : 0.035,
+        const materialSpecs = new THREE.PointsMaterial({
+            size: window.innerWidth < 768 ? 0.045 : 0.032,
             vertexColors: true,
             transparent: true,
             opacity: 0.95,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
-            map: createCircleTexture()
+            map: particleTexture
         });
 
-        const pointsObject = new THREE.Points(geometry, material);
-        scene.add(pointsObject);
+        const particleCloudSystem = new THREE.Points(mainGeometry, materialSpecs);
+        scene.add(particleCloudSystem);
 
-        // --- PROGRESS INTERPOLATION & MOTION SYSTEM ---
-        const trackingObj = { transitionProgress: 0 };
+        // --- TIMELINE SEQUENCING AND INTERPOLATION TRACKS ---
+        const interpolationState = { phaseProgress: 0 };
 
-        gsap.to(trackingObj, {
-            transitionProgress: 1,
+        // Continuous timeline linking scroll position to spatial geometry state parameters
+        gsap.timeline({
             scrollTrigger: {
-                trigger: ".content",
+                trigger: ".scroller",
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 1.0
-            },
+                scrub: 1.2,
+                invalidateOnRefresh: true
+            }
+        })
+        .to(interpolationState, {
+            phaseProgress: 2, // Interpolate smooth curves between state 0 (Vortex), 1 (Helix), and 2 (Wave Grid)
+            ease: "none",
             onUpdate: () => {
-                const progression = trackingObj.transitionProgress;
-                const positionAttr = geometry.attributes.position;
-                
-                // Coordinate Morph execution loops
-                for(let i=0; i<particleCount; i++) {
+                const currentProgress = interpolationState.phaseProgress;
+                const activeArray = mainGeometry.attributes.position.array;
+
+                for (let i = 0; i < totalParticles; i++) {
                     const i3 = i * 3;
-                    positionAttr.array[i3] = THREE.MathUtils.lerp(posGalaxy[i3], posDNA[i3], progression);
-                    positionAttr.array[i3+1] = THREE.MathUtils.lerp(posGalaxy[i3+1], posDNA[i3+1], progression);
-                    positionAttr.array[i3+2] = THREE.MathUtils.lerp(posGalaxy[i3+2], posDNA[i3+2], progression);
-                }
-                positionAttr.needsUpdate = true;
 
-                // Cinematic Camera track transformations along the axis vectors
-                if(progression < 0.4) {
-                    const factor = progression / 0.4;
-                    camera.position.x = THREE.MathUtils.lerp(0, 0.5, factor);
-                    camera.position.y = THREE.MathUtils.lerp(2.5, 0.0, factor);
-                    camera.position.z = THREE.MathUtils.lerp(4.5, 3.5, factor);
-                    camera.lookAt(0, 0, 0);
+                    if (currentProgress <= 1.0) {
+                        // Linear vector interpolation stage: Hero Vortex -> Double Helix Matrix
+                        activeArray[i3] = THREE.MathUtils.lerp(positionsHero[i3], positionsAnalytics[i3], currentProgress);
+                        activeArray[i3 + 1] = THREE.MathUtils.lerp(positionsHero[i3 + 1], positionsAnalytics[i3 + 1], currentProgress);
+                        activeArray[i3 + 2] = THREE.MathUtils.lerp(positionsHero[i3 + 2], positionsAnalytics[i3 + 2], currentProgress);
+                    } else {
+                        // Linear vector interpolation stage: Double Helix Matrix -> Horizon Wave Plane
+                        const secondaryFactor = currentProgress - 1.0;
+                        activeArray[i3] = THREE.MathUtils.lerp(positionsAnalytics[i3], positionsHorizon[i3], secondaryFactor);
+                        activeArray[i3 + 1] = THREE.MathUtils.lerp(positionsAnalytics[i3 + 1], positionsHorizon[i3 + 1], secondaryFactor);
+                        activeArray[i3 + 2] = THREE.MathUtils.lerp(positionsAnalytics[i3 + 2], positionsHorizon[i3 + 2], secondaryFactor);
+                    }
+                }
+                mainGeometry.attributes.position.needsUpdate = true;
+
+                // Cinematic camera coordinate adjustment script syncing with visual section focus points
+                if (currentProgress <= 1.0) {
+                    camera.position.z = THREE.MathUtils.lerp(4.5, 4.0, currentProgress);
+                    camera.position.y = THREE.MathUtils.lerp(0, 0.2, currentProgress);
+                    camera.rotation.x = THREE.MathUtils.lerp(0, 0.1, currentProgress);
                 } else {
-                    const factor = (progression - 0.4) / 0.6;
-                    camera.position.x = THREE.MathUtils.lerp(0.5, 0, factor);
-                    camera.position.y = THREE.MathUtils.lerp(0.0, -1.0, factor);
-                    camera.position.z = THREE.MathUtils.lerp(3.5, 5.0, factor);
-                    camera.lookAt(0, 0, 0);
+                    const secondaryFactor = currentProgress - 1.0;
+                    camera.position.z = THREE.MathUtils.lerp(4.0, 3.2, secondaryFactor);
+                    camera.position.y = THREE.MathUtils.lerp(0.2, 0.8, secondaryFactor);
+                    camera.rotation.x = THREE.MathUtils.lerp(0.1, -0.4, secondaryFactor);
                 }
             }
         });
 
-        // --- CORE RUNTIME LOOP ---
-        const clock = new THREE.Clock();
+        // --- ANIMATION INTERPOLATION RUNTIME ENGINE LOOP ---
+        const clockTimer = new THREE.Clock();
 
-        function runEngine() {
-            requestAnimationFrame(runEngine);
-            const timeDelta = clock.getElapsedTime();
-            const progression = trackingObj.transitionProgress;
+        function renderFramePipeline() {
+            requestAnimationFrame(renderFramePipeline);
+            
+            const elapsedRuntime = clockTimer.getElapsedTime();
+            const currentScrollProgress = interpolationState.phaseProgress;
 
-            if (progression < 0.15) {
-                // Galaxy orbit rotations
-                pointsObject.rotation.y = timeDelta * 0.07;
-                pointsObject.rotation.x = 0.45;
-                pointsObject.rotation.z = 0;
+            if (currentScrollProgress <= 1.0) {
+                // Screen 1: Fluid orbital matrix spin values
+                particleCloudSystem.rotation.y = elapsedRuntime * 0.06;
+                particleCloudSystem.rotation.x = Math.sin(elapsedRuntime * 0.2) * 0.05 + 0.2;
+                particleCloudSystem.rotation.z = 0;
+            } else if (currentScrollProgress > 1.0 && currentScrollProgress <= 1.8) {
+                // Screen 2: High-speed vertical twisting animation values for DNA Helix
+                particleCloudSystem.rotation.y = elapsedRuntime * 0.45;
+                particleCloudSystem.rotation.x = 0.15;
+                particleCloudSystem.rotation.z = Math.cos(elapsedRuntime * 0.1) * 0.05;
             } else {
-                // High-speed DNA vertical twisting transformations
-                pointsObject.rotation.y = timeDelta * 0.55;
-                pointsObject.rotation.x = THREE.MathUtils.lerp(0.45, 0.1, (progression - 0.15) / 0.85);
-                pointsObject.rotation.z = THREE.MathUtils.lerp(0, -0.15, (progression - 0.15) / 0.85);
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        runEngine();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
-</body>
-</html>
+                // Screen 3: Subtle landscape plane tracking values
+                particleCloudSystem.rotation.y = elapsedRuntime * 0.02;
+                particleCloudSystem.rotation.x = -0.1;
